@@ -1,0 +1,27 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    env_file: .env
+    environment:
+      - DATABASE_PATH=/app/data/gitbook-editing.db
+      - CLIENT_URL=http://localhost
+    volumes:
+      - server-data:/app/data
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    restart: unless-stopped
+
+volumes:
+  server-data:
